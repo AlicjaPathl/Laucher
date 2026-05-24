@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Neon Game Portal{% endblock %}</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --panel-bg: rgba(26, 26, 36, 0.45);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --primary-glow: #bd00ff;
+            --secondary-glow: #00f0ff;
+            --text-color: #c5c6c7;
+            --text-title: #ffffff;
+            --success-color: #00ff66;
+            --warning-color: #ffaa00;
+            --error-color: #ff3366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(189, 0, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(0, 240, 255, 0.12) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 15, 26, 1) 0px, transparent 100%);
+            background-attachment: fixed;
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Particles effect background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            background-color: rgba(11, 12, 16, 0.6);
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo span {
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-link:hover {
+            color: var(--text-title);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-title);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            border-color: transparent;
+            box-shadow: 0 0 15px rgba(189, 0, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            z-index: 5;
+        }
+
+        /* Message Notifications */
+        .messages-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border-left: 4px solid transparent;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 102, 0.1);
+            border-left-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .alert-error, .alert-danger {
+            background: rgba(255, 51, 102, 0.1);
+            border-left-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .alert-warning {
+            background: rgba(255, 170, 0, 0.1);
+            border-left-color: var(--warning-color);
+            color: var(--warning-color);
+        }
+
+        .alert-info {
+            background: rgba(0, 240, 255, 0.1);
+            border-left-color: var(--secondary-glow);
+            color: var(--secondary-glow);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+            border-top: 1px solid var(--border-color);
+            background-color: rgba(11, 12, 16, 0.3);
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            transition: all 0.4s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 20px 45px rgba(189, 0, 255, 0.1);
+            border-color: rgba(189, 0, 255, 0.2);
+        }
+
+        {% block extra_style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <header>
+        <a href="/" class="logo">
+            ⚡ <span>NEON</span> GAMES
+        </a>
+        <nav>
+            {% if request.session.username %}
+                <span style="font-size: 14px; font-weight: 600; color: var(--secondary-glow)">
+                    👤 {{ request.session.username }}
+                </span>
+                <a href="{% url 'download' %}" class="nav-link">Pobierz Launcher</a>
+                <a href="{% url 'logout' %}" class="nav-btn">Wyloguj</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link">Zaloguj się</a>
+                <a href="{% url 'register' %}" class="nav-btn">Zarejestruj</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        &copy; 2026 Neon Game Launcher Ecosystem. Wszystkie prawa zastrzeżone.
+    </footer>
+
+    <script>
+        // Auto-dismiss alerts after 4 seconds
+        setTimeout(() => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>

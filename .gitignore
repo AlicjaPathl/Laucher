@@ -1,0 +1,80 @@
+# =========================
+# Build output
+# =========================
+bin/
+*.exe
+*.out
+
+# =========================
+# Go
+# =========================
+*.test
+coverage.out
+
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtualenv
+venv/
+.env/
+testenv/
+
+# Django
+www/db.sqlite3
+www/staticfiles/
+www/media/
+
+# Python cache/tools
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+*.log
+server.log
+
+# =========================
+# Runtime/generated data
+# =========================
+owned_games.json
+playtime.json
+server.pid
+
+# =========================
+# Secrets/config
+# =========================
+.env
+.env.*
+*.secret
+config.local.*
+
+# =========================
+# Node (jeśli frontend kiedyś użyje npm)
+# =========================
+node_modules/
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+*.tmp

@@ -1,0 +1,185 @@
+{% extends 'web/base.html' %}
+
+{% block title %}Pobierz Launcher - Neon Games{% endblock %}
+
+{% block extra_style %}
+    .download-container {
+        width: 100%;
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .welcome-card {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(15px);
+        border-radius: 16px;
+        padding: 30px 40px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .welcome-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--text-title);
+        margin-bottom: 10px;
+    }
+
+    .welcome-desc {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .cards-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .download-card {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(15px);
+        border-radius: 16px;
+        padding: 40px 30px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.4s ease;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    .download-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 45px rgba(0, 240, 255, 0.1);
+        border-color: rgba(0, 240, 255, 0.2);
+    }
+
+    .platform-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .download-card:hover .platform-icon {
+        transform: scale(1.1);
+    }
+
+    .platform-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--text-title);
+        margin-bottom: 10px;
+    }
+
+    .platform-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 30px;
+        min-height: 40px;
+    }
+
+    .btn-download {
+        display: inline-block;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-title);
+        border: 1px solid var(--border-color);
+        border-radius: 30px;
+        padding: 12px 24px;
+        font-size: 15px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: auto;
+    }
+
+    .btn-download.active {
+        background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+        border-color: transparent;
+    }
+
+    .btn-download.active:hover {
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-download.inactive {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .status-badge {
+        margin-top: 15px;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-available {
+        color: var(--success-color);
+    }
+
+    .status-unavailable {
+        color: var(--error-color);
+    }
+{% endblock %}
+
+{% block content %}
+<div class="download-container">
+    <div class="welcome-card">
+        <h2 class="welcome-title">Witaj, {{ username }}!</h2>
+        <p class="welcome-desc">
+            Pobierz dedykowany launcher, aby uzyskać dostęp do wszystkich swoich gier, zarządzać instalacjami oraz grać ze znajomymi.
+        </p>
+    </div>
+
+    <div class="cards-grid">
+        <!-- Linux Card -->
+        <div class="download-card">
+            <div class="platform-icon">🐧</div>
+            <h3 class="platform-name">Linux Build</h3>
+            <p class="platform-desc">Zoptymalizowany dla dystrybucji Linux z pełną integracją Wine do gier Windows.</p>
+            
+            {% if linux_exists %}
+                <a href="{% url 'download_linux' %}" class="btn-download active">Pobierz dla Linux</a>
+                <span class="status-badge status-available">✓ Gotowy do pobrania</span>
+            {% else %}
+                <button class="btn-download inactive" disabled>Niedostępny</button>
+                <span class="status-badge status-unavailable">✗ Brak buildu na serwerze</span>
+            {% endif %}
+        </div>
+
+        <!-- Windows Card -->
+        <div class="download-card">
+            <div class="platform-icon">🪟</div>
+            <h3 class="platform-name">Windows Build</h3>
+            <p class="platform-desc">Natywna kompilacja exe dla systemów Windows 10 oraz 11.</p>
+            
+            {% if windows_exists %}
+                <a href="{% url 'download_windows' %}" class="btn-download active">Pobierz dla Windows</a>
+                <span class="status-badge status-available">✓ Gotowy do pobrania</span>
+            {% else %}
+                <button class="btn-download inactive" disabled>Niedostępny</button>
+                <span class="status-badge status-unavailable">✗ Brak buildu na serwerze</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
